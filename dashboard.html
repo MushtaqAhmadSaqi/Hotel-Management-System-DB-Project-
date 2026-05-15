@@ -3,130 +3,150 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard - Hotel Management System</title>
+  <title>Dashboard - Royal Stay HMS</title>
   <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏨</text></svg>">
 </head>
 <body>
+  <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
+  <div class="menu-overlay" onclick="toggleSidebar()"></div>
+
   <div class="layout">
-    
-<aside class="sidebar">
-  <div class="brand">
-    <h2>Royal Stay HMS</h2>
-    <p>Hotel Management System</p>
-  </div>
-  <nav class="nav">
-    <a href="dashboard.html">Dashboard</a>
-    <a href="guests.html">Guests</a>
-    <a href="rooms.html">Rooms</a>
-    <a href="bookings.html">Bookings</a>
-    <a href="payments.html">Payments</a>
-    <a href="services.html">Services</a>
-    <a href="staff.html">Staff</a>
-    <a href="reports.html">Reports</a>
-    <a href="#" onclick="HMS.logout()">Logout</a>
-  </nav>
-</aside>
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <h2>Royal Stay</h2>
+        <p>Hotel Management System</p>
+      </div>
+      <nav class="nav">
+        <a href="dashboard.html" class="active"><span class="icon">📊</span> Dashboard</a>
+        <a href="guests.html"><span class="icon">👥</span> Guests</a>
+        <a href="rooms.html"><span class="icon">🛏️</span> Rooms</a>
+        <a href="bookings.html"><span class="icon">📅</span> Bookings</a>
+        <a href="payments.html"><span class="icon">💳</span> Payments</a>
+        <a href="services.html"><span class="icon">🛎️</span> Services</a>
+        <a href="staff.html"><span class="icon">👨‍💼</span> Staff</a>
+        <a href="reports.html"><span class="icon">📈</span> Reports</a>
+        <a href="#" onclick="HMS.logout()"><span class="icon">🚪</span> Logout</a>
+      </nav>
+    </aside>
 
     <main class="main">
       <header class="topbar">
         <div>
           <h1>Dashboard</h1>
-          <p>Overview of hotel rooms, guests, bookings, and revenue.</p>
+          <p>Welcome back! Here's your hotel overview.</p>
         </div>
-        <button class="btn btn-light" onclick="HMS.logout()">Logout</button>
+        <div class="topbar-right">
+          <div class="user-avatar">A</div>
+          <button class="btn btn-light" onclick="HMS.logout()">Logout</button>
+        </div>
       </header>
 
-      
-<section class="card-grid">
-  <div class="stat-card">
-    <span>Total Guests</span>
-    <h2 id="totalGuests">0</h2>
-  </div>
-  <div class="stat-card">
-    <span>Total Rooms</span>
-    <h2 id="totalRooms">0</h2>
-  </div>
-  <div class="stat-card">
-    <span>Available Rooms</span>
-    <h2 id="availableRooms">0</h2>
-  </div>
-  <div class="stat-card">
-    <span>Booked / Occupied Rooms</span>
-    <h2 id="bookedRooms">0</h2>
-  </div>
-  <div class="stat-card">
-    <span>Total Bookings</span>
-    <h2 id="totalBookings">0</h2>
-  </div>
-  <div class="stat-card">
-    <span>Pending Payments</span>
-    <h2 id="pendingPayments">0</h2>
-  </div>
-  <div class="stat-card">
-    <span>Total Revenue</span>
-    <h2 id="totalRevenue">0</h2>
-  </div>
-  <div class="stat-card">
-    <span>Total Staff</span>
-    <h2 id="totalStaff">0</h2>
-  </div>
-</section>
+      <div class="notice">
+        <span>📅</span>
+        <span>Today is <strong>May 16, 2026</strong>. You have <strong>3</strong> check-ins and <strong>1</strong> check-out scheduled.</span>
+      </div>
 
-<section class="content-card">
-  <h2>Recent Bookings</h2>
-  <div class="table-wrapper">
-    <table>
-      <thead>
-        <tr>
-          <th>Booking ID</th>
-          <th>Guest</th>
-          <th>Room</th>
-          <th>Check-in</th>
-          <th>Check-out</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody id="recentBookings"></tbody>
-    </table>
-  </div>
-</section>
+      <section class="card-grid">
+        <div class="stat-card">
+          <div class="icon">👥</div>
+          <span>Total Guests</span>
+          <h2 id="totalGuests">0</h2>
+        </div>
+        <div class="stat-card">
+          <div class="icon">🛏️</div>
+          <span>Total Rooms</span>
+          <h2 id="totalRooms">0</h2>
+        </div>
+        <div class="stat-card">
+          <div class="icon">✅</div>
+          <span>Available Rooms</span>
+          <h2 id="availableRooms">0</h2>
+        </div>
+        <div class="stat-card">
+          <div class="icon">🔑</div>
+          <span>Booked Rooms</span>
+          <h2 id="bookedRooms">0</h2>
+        </div>
+        <div class="stat-card">
+          <div class="icon">📅</div>
+          <span>Total Bookings</span>
+          <h2 id="totalBookings">0</h2>
+        </div>
+        <div class="stat-card">
+          <div class="icon">⏳</div>
+          <span>Pending Payments</span>
+          <h2 id="pendingPayments">0</h2>
+        </div>
+        <div class="stat-card">
+          <div class="icon">💰</div>
+          <span>Total Revenue</span>
+          <h2 id="totalRevenue">0</h2>
+        </div>
+        <div class="stat-card">
+          <div class="icon">👨‍💼</div>
+          <span>Total Staff</span>
+          <h2 id="totalStaff">0</h2>
+        </div>
+      </section>
 
+      <section class="content-card">
+        <h2>Recent Bookings</h2>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Booking ID</th>
+                <th>Guest</th>
+                <th>Room</th>
+                <th>Check-in</th>
+                <th>Check-out</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="recentBookings"></tbody>
+          </table>
+        </div>
+      </section>
     </main>
   </div>
 
   <script src="js/app.js"></script>
-  
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-  const guests = HMS.get("guests");
-  const rooms = HMS.get("rooms");
-  const bookings = HMS.get("bookings");
-  const payments = HMS.get("payments");
-  const staff = HMS.get("staff");
+  <script>
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.querySelector('.menu-overlay').classList.toggle('active');
+    }
 
-  document.getElementById("totalGuests").textContent = guests.length;
-  document.getElementById("totalRooms").textContent = rooms.length;
-  document.getElementById("availableRooms").textContent = rooms.filter(r => r.status === "Available").length;
-  document.getElementById("bookedRooms").textContent = rooms.filter(r => r.status === "Booked" || r.status === "Occupied").length;
-  document.getElementById("totalBookings").textContent = bookings.length;
-  document.getElementById("pendingPayments").textContent = payments.filter(p => p.paymentStatus !== "Paid").length;
-  document.getElementById("totalRevenue").textContent = payments.reduce((sum, p) => sum + Number(p.paidAmount || 0), 0);
-  document.getElementById("totalStaff").textContent = staff.length;
+    document.addEventListener("DOMContentLoaded", function() {
+      const guests = HMS.get("guests");
+      const rooms = HMS.get("rooms");
+      const bookings = HMS.get("bookings");
+      const payments = HMS.get("payments");
+      const staff = HMS.get("staff");
 
-  const rows = bookings.slice(-5).reverse().map(b => `
-    <tr>
-      <td>${b.bookingId}</td>
-      <td>${b.guestName}</td>
-      <td>${b.roomNumber}</td>
-      <td>${b.checkInDate}</td>
-      <td>${b.checkOutDate}</td>
-      <td>${HMS.badge(b.bookingStatus)}</td>
-    </tr>
-  `).join("");
+      document.getElementById("totalGuests").textContent = guests.length;
+      document.getElementById("totalRooms").textContent = rooms.length;
+      document.getElementById("availableRooms").textContent = rooms.filter(r => r.status === "Available").length;
+      document.getElementById("bookedRooms").textContent = rooms.filter(r => r.status === "Booked" || r.status === "Occupied").length;
+      document.getElementById("totalBookings").textContent = bookings.length;
+      document.getElementById("pendingPayments").textContent = payments.filter(p => p.paymentStatus !== "Paid").length;
+      document.getElementById("totalRevenue").textContent = HMS.formatCurrency(payments.reduce((sum, p) => sum + Number(p.paidAmount || 0), 0));
+      document.getElementById("totalStaff").textContent = staff.length;
 
-  document.getElementById("recentBookings").innerHTML = rows || `<tr><td colspan="6">No bookings found.</td></tr>`;
-});
-</script>
+      const rows = bookings.slice(-5).reverse().map(b => `
+        <tr>
+          <td><strong>${b.bookingId}</strong></td>
+          <td>${b.guestName}</td>
+          <td><span class="badge badge-info">Room ${b.roomNumber}</span></td>
+          <td>${HMS.formatDate(b.checkInDate)}</td>
+          <td>${HMS.formatDate(b.checkOutDate)}</td>
+          <td>${HMS.badge(b.bookingStatus)}</td>
+        </tr>
+      `).join("");
 
+      document.getElementById("recentBookings").innerHTML = rows || `<tr><td colspan="6" class="empty-state"><span class="icon">📋</span><h3>No bookings yet</h3><p>Start by creating a new booking</p></td></tr>`;
+    });
+  </script>
 </body>
 </html>

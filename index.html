@@ -3,44 +3,317 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hotel Management System - Login</title>
+  <title>Royal Stay HMS - Login</title>
   <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏨</text></svg>">
 </head>
 <body class="login-body">
-  <div class="login-card">
-    <h1>Hotel Management System</h1>
-    <p>Admin login panel</p>
-
-    <form id="loginForm">
-      <div class="form-group">
-        <label>Username</label>
-        <input type="text" id="username" placeholder="Enter username" required />
-      </div>
-
-      <div class="form-group">
-        <label>Password</label>
-        <input type="password" id="password" placeholder="Enter password" required />
-      </div>
-
-      <button class="btn btn-primary btn-full" type="submit">Login</button>
-    </form>
-
-    <p class="footer-note">Demo Login: admin / admin123</p>
+  <!-- Animated background elements -->
+  <div class="floating-shapes">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+    <div class="shape shape-4"></div>
   </div>
 
+  <div class="login-card">
+    <div class="login-header">
+      <div class="hotel-icon">🏨</div>
+      <h1>Royal Stay</h1>
+      <p>Hotel Management System</p>
+    </div>
+
+    <form id="loginForm" class="login-form">
+      <div class="form-group">
+        <label>
+          <span class="input-icon">👤</span>
+          Username
+        </label>
+        <input type="text" id="username" placeholder="Enter your username" required />
+      </div>
+
+      <div class="form-group">
+        <label>
+          <span class="input-icon">🔒</span>
+          Password
+        </label>
+        <input type="password" id="password" placeholder="Enter your password" required />
+      </div>
+
+      <div class="form-options">
+        <label class="remember-me">
+          <input type="checkbox" />
+          <span>Remember me</span>
+        </label>
+        <a href="#" class="forgot-link">Forgot password?</a>
+      </div>
+
+      <button class="btn btn-primary btn-full login-btn" type="submit">
+        <span>Sign In</span>
+        <span class="btn-arrow">→</span>
+      </button>
+    </form>
+
+    <div class="login-footer">
+      <p class="demo-info">
+        <span class="demo-badge">Demo Access</span>
+        Username: <strong>admin</strong> | Password: <strong>admin123</strong>
+      </p>
+    </div>
+
+    <div class="login-decoration">
+      <div class="decoration-line"></div>
+      <div class="social-icons">
+        <span>📧</span>
+        <span>📱</span>
+        <span>🌐</span>
+      </div>
+      <div class="decoration-line"></div>
+    </div>
+  </div>
+
+  <style>
+    .floating-shapes {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .shape {
+      position: absolute;
+      border-radius: 50%;
+      animation: float 8s ease-in-out infinite;
+    }
+
+    .shape-1 {
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      top: -150px;
+      left: -150px;
+    }
+
+    .shape-2 {
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+      bottom: -100px;
+      right: -100px;
+      animation-delay: -4s;
+    }
+
+    .shape-3 {
+      width: 150px;
+      height: 150px;
+      background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%);
+      top: 30%;
+      right: 10%;
+      animation-delay: -2s;
+    }
+
+    .shape-4 {
+      width: 80px;
+      height: 80px;
+      background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+      bottom: 20%;
+      left: 15%;
+      animation-delay: -6s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-30px) rotate(10deg); }
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .hotel-icon {
+      font-size: 56px;
+      margin-bottom: 16px;
+      display: inline-block;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    .login-card h1 {
+      font-size: 32px;
+      margin-bottom: 6px;
+    }
+
+    .login-form .form-group label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .input-icon {
+      font-size: 16px;
+    }
+
+    .form-options {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+
+    .remember-me {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-light);
+      cursor: pointer;
+    }
+
+    .remember-me input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--primary);
+    }
+
+    .forgot-link {
+      color: var(--primary);
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    .forgot-link:hover {
+      color: var(--primary-dark);
+    }
+
+    .login-btn {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-arrow {
+      transition: transform 0.3s ease;
+    }
+
+    .login-btn:hover .btn-arrow {
+      transform: translateX(4px);
+    }
+
+    .login-footer {
+      margin-top: 24px;
+      text-align: center;
+    }
+
+    .demo-info {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      color: var(--text-light);
+      font-size: 13px;
+    }
+
+    .demo-badge {
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.15), rgba(118, 75, 162, 0.15));
+      color: var(--primary);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .login-decoration {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .decoration-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+    }
+
+    .social-icons {
+      display: flex;
+      gap: 12px;
+    }
+
+    .social-icons span {
+      font-size: 18px;
+      opacity: 0.5;
+      transition: opacity 0.3s, transform 0.3s;
+    }
+
+    .social-icons span:hover {
+      opacity: 1;
+      transform: scale(1.2);
+    }
+
+    /* Shake animation for error */
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-10px); }
+      75% { transform: translateX(10px); }
+    }
+
+    .shake {
+      animation: shake 0.4s ease;
+    }
+  </style>
+
   <script>
-    document.getElementById("loginForm").addEventListener("submit", function(e) {
+    const loginForm = document.getElementById('loginForm');
+    const loginCard = document.querySelector('.login-card');
+
+    loginForm.addEventListener('submit', function(e) {
       e.preventDefault();
 
-      const username = document.getElementById("username").value.trim();
-      const password = document.getElementById("password").value.trim();
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
 
       if (username === "admin" && password === "admin123") {
-        localStorage.setItem("hms_logged_in", "true");
-        window.location.href = "dashboard.html";
+        // Add success animation
+        const btn = loginForm.querySelector('.login-btn');
+        btn.innerHTML = '<span>✓ Welcome!</span>';
+        btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+
+        setTimeout(() => {
+          localStorage.setItem("hms_logged_in", "true");
+          window.location.href = "dashboard.html";
+        }, 800);
       } else {
-        alert("Invalid username or password. Use admin / admin123");
+        // Add shake animation
+        loginCard.classList.add('shake');
+        setTimeout(() => loginCard.classList.remove('shake'), 400);
+
+        // Add error styling
+        document.getElementById('username').style.borderColor = '#ef4444';
+        document.getElementById('password').style.borderColor = '#ef4444';
+
+        setTimeout(() => {
+          document.getElementById('username').style.borderColor = '';
+          document.getElementById('password').style.borderColor = '';
+        }, 2000);
       }
+    });
+
+    // Clear error on input
+    document.querySelectorAll('#username, #password').forEach(input => {
+      input.addEventListener('input', function() {
+        this.style.borderColor = '';
+      });
     });
   </script>
 </body>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reports - Hotel Management System</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="layout">
+    
+<aside class="sidebar">
+  <div class="brand">
+    <h2>Royal Stay HMS</h2>
+    <p>Hotel Management System</p>
+  </div>
+  <nav class="nav">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="guests.html">Guests</a>
+    <a href="rooms.html">Rooms</a>
+    <a href="bookings.html">Bookings</a>
+    <a href="payments.html">Payments</a>
+    <a href="services.html">Services</a>
+    <a href="staff.html">Staff</a>
+    <a href="reports.html">Reports</a>
+    <a href="#" onclick="HMS.logout()">Logout</a>
+  </nav>
+</aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <h1>Reports</h1>
+          <p>Simple reports for viva and documentation screenshots.</p>
+        </div>
+        <button class="btn btn-light" onclick="HMS.logout()">Logout</button>
+      </header>
+
+      
+<section class="card-grid">
+  <div class="stat-card">
+    <span>Guests</span>
+    <h2 id="guestsCount">0</h2>
+  </div>
+  <div class="stat-card">
+    <span>Rooms</span>
+    <h2 id="roomsCount">0</h2>
+  </div>
+  <div class="stat-card">
+    <span>Bookings</span>
+    <h2 id="bookingsCount">0</h2>
+  </div>
+  <div class="stat-card">
+    <span>Revenue Collected</span>
+    <h2 id="revenueCount">0</h2>
+  </div>
+</section>
+
+<section class="content-card">
+  <h2>Room Status Report</h2>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Status</th>
+          <th>Total Rooms</th>
+        </tr>
+      </thead>
+      <tbody id="roomStatusReport"></tbody>
+    </table>
+  </div>
+</section>
+
+<section class="content-card">
+  <h2>Payment Status Report</h2>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Status</th>
+          <th>Total Records</th>
+          <th>Total Amount</th>
+          <th>Paid Amount</th>
+          <th>Remaining Amount</th>
+        </tr>
+      </thead>
+      <tbody id="paymentStatusReport"></tbody>
+    </table>
+  </div>
+</section>
+
+    </main>
+  </div>
+
+  <script src="js/app.js"></script>
+  
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const guests = HMS.get("guests");
+  const rooms = HMS.get("rooms");
+  const bookings = HMS.get("bookings");
+  const payments = HMS.get("payments");
+
+  document.getElementById("guestsCount").textContent = guests.length;
+  document.getElementById("roomsCount").textContent = rooms.length;
+  document.getElementById("bookingsCount").textContent = bookings.length;
+  document.getElementById("revenueCount").textContent = payments.reduce((sum, p) => sum + Number(p.paidAmount || 0), 0);
+
+  const roomStatuses = {};
+  rooms.forEach(r => roomStatuses[r.status] = (roomStatuses[r.status] || 0) + 1);
+
+  document.getElementById("roomStatusReport").innerHTML = Object.entries(roomStatuses).map(([status, count]) => `
+    <tr>
+      <td>${HMS.badge(status)}</td>
+      <td>${count}</td>
+    </tr>
+  `).join("") || `<tr><td colspan="2">No room data found.</td></tr>`;
+
+  const paymentStatuses = {};
+  payments.forEach(p => {
+    if (!paymentStatuses[p.paymentStatus]) {
+      paymentStatuses[p.paymentStatus] = { count: 0, total: 0, paid: 0, remaining: 0 };
+    }
+    paymentStatuses[p.paymentStatus].count += 1;
+    paymentStatuses[p.paymentStatus].total += Number(p.totalAmount || 0);
+    paymentStatuses[p.paymentStatus].paid += Number(p.paidAmount || 0);
+    paymentStatuses[p.paymentStatus].remaining += Number(p.remainingAmount || 0);
+  });
+
+  document.getElementById("paymentStatusReport").innerHTML = Object.entries(paymentStatuses).map(([status, data]) => `
+    <tr>
+      <td>${HMS.badge(status)}</td>
+      <td>${data.count}</td>
+      <td>${data.total}</td>
+      <td>${data.paid}</td>
+      <td>${data.remaining}</td>
+    </tr>
+  `).join("") || `<tr><td colspan="5">No payment data found.</td></tr>`;
+});
+</script>
+
+</body>
+</html>

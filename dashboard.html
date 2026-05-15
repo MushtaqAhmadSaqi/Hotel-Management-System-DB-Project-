@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard - Hotel Management System</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="layout">
+    
+<aside class="sidebar">
+  <div class="brand">
+    <h2>Royal Stay HMS</h2>
+    <p>Hotel Management System</p>
+  </div>
+  <nav class="nav">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="guests.html">Guests</a>
+    <a href="rooms.html">Rooms</a>
+    <a href="bookings.html">Bookings</a>
+    <a href="payments.html">Payments</a>
+    <a href="services.html">Services</a>
+    <a href="staff.html">Staff</a>
+    <a href="reports.html">Reports</a>
+    <a href="#" onclick="HMS.logout()">Logout</a>
+  </nav>
+</aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <h1>Dashboard</h1>
+          <p>Overview of hotel rooms, guests, bookings, and revenue.</p>
+        </div>
+        <button class="btn btn-light" onclick="HMS.logout()">Logout</button>
+      </header>
+
+      
+<section class="card-grid">
+  <div class="stat-card">
+    <span>Total Guests</span>
+    <h2 id="totalGuests">0</h2>
+  </div>
+  <div class="stat-card">
+    <span>Total Rooms</span>
+    <h2 id="totalRooms">0</h2>
+  </div>
+  <div class="stat-card">
+    <span>Available Rooms</span>
+    <h2 id="availableRooms">0</h2>
+  </div>
+  <div class="stat-card">
+    <span>Booked / Occupied Rooms</span>
+    <h2 id="bookedRooms">0</h2>
+  </div>
+  <div class="stat-card">
+    <span>Total Bookings</span>
+    <h2 id="totalBookings">0</h2>
+  </div>
+  <div class="stat-card">
+    <span>Pending Payments</span>
+    <h2 id="pendingPayments">0</h2>
+  </div>
+  <div class="stat-card">
+    <span>Total Revenue</span>
+    <h2 id="totalRevenue">0</h2>
+  </div>
+  <div class="stat-card">
+    <span>Total Staff</span>
+    <h2 id="totalStaff">0</h2>
+  </div>
+</section>
+
+<section class="content-card">
+  <h2>Recent Bookings</h2>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Booking ID</th>
+          <th>Guest</th>
+          <th>Room</th>
+          <th>Check-in</th>
+          <th>Check-out</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="recentBookings"></tbody>
+    </table>
+  </div>
+</section>
+
+    </main>
+  </div>
+
+  <script src="js/app.js"></script>
+  
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const guests = HMS.get("guests");
+  const rooms = HMS.get("rooms");
+  const bookings = HMS.get("bookings");
+  const payments = HMS.get("payments");
+  const staff = HMS.get("staff");
+
+  document.getElementById("totalGuests").textContent = guests.length;
+  document.getElementById("totalRooms").textContent = rooms.length;
+  document.getElementById("availableRooms").textContent = rooms.filter(r => r.status === "Available").length;
+  document.getElementById("bookedRooms").textContent = rooms.filter(r => r.status === "Booked" || r.status === "Occupied").length;
+  document.getElementById("totalBookings").textContent = bookings.length;
+  document.getElementById("pendingPayments").textContent = payments.filter(p => p.paymentStatus !== "Paid").length;
+  document.getElementById("totalRevenue").textContent = payments.reduce((sum, p) => sum + Number(p.paidAmount || 0), 0);
+  document.getElementById("totalStaff").textContent = staff.length;
+
+  const rows = bookings.slice(-5).reverse().map(b => `
+    <tr>
+      <td>${b.bookingId}</td>
+      <td>${b.guestName}</td>
+      <td>${b.roomNumber}</td>
+      <td>${b.checkInDate}</td>
+      <td>${b.checkOutDate}</td>
+      <td>${HMS.badge(b.bookingStatus)}</td>
+    </tr>
+  `).join("");
+
+  document.getElementById("recentBookings").innerHTML = rows || `<tr><td colspan="6">No bookings found.</td></tr>`;
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Booking Management - Hotel Management System</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="layout">
+    
+<aside class="sidebar">
+  <div class="brand">
+    <h2>Royal Stay HMS</h2>
+    <p>Hotel Management System</p>
+  </div>
+  <nav class="nav">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="guests.html">Guests</a>
+    <a href="rooms.html">Rooms</a>
+    <a href="bookings.html">Bookings</a>
+    <a href="payments.html">Payments</a>
+    <a href="services.html">Services</a>
+    <a href="staff.html">Staff</a>
+    <a href="reports.html">Reports</a>
+    <a href="#" onclick="HMS.logout()">Logout</a>
+  </nav>
+</aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <h1>Booking Management</h1>
+          <p>Create, view, update, cancel, and delete room bookings.</p>
+        </div>
+        <button class="btn btn-light" onclick="HMS.logout()">Logout</button>
+      </header>
+
+      
+<section class="content-card">
+  <h2>Booking Form</h2>
+  <form id="bookingForm">
+    <input type="hidden" id="editBookingId" />
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Booking ID</label>
+        <input type="text" id="bookingId" placeholder="Auto or type e.g. B001" />
+      </div>
+      <div class="form-group">
+        <label>Guest</label>
+        <select id="guestId" required></select>
+      </div>
+      <div class="form-group">
+        <label>Room</label>
+        <select id="roomId" required></select>
+      </div>
+      <div class="form-group">
+        <label>Check-in Date</label>
+        <input type="date" id="checkInDate" required />
+      </div>
+      <div class="form-group">
+        <label>Check-out Date</label>
+        <input type="date" id="checkOutDate" required />
+      </div>
+      <div class="form-group">
+        <label>Booking Status</label>
+        <select id="bookingStatus">
+          <option>Pending</option>
+          <option>Confirmed</option>
+          <option>Cancelled</option>
+          <option>Completed</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" type="submit">Save Booking</button>
+      <button class="btn btn-light" type="button" onclick="resetBookingForm()">Clear</button>
+    </div>
+  </form>
+</section>
+
+<section class="content-card">
+  <div class="table-header">
+    <h2>Booking Records</h2>
+    <input class="search-input" id="searchBooking" placeholder="Search bookings..." />
+  </div>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Booking ID</th>
+          <th>Guest</th>
+          <th>Room</th>
+          <th>Check-in</th>
+          <th>Check-out</th>
+          <th>Days</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="bookingTable"></tbody>
+    </table>
+  </div>
+</section>
+
+    </main>
+  </div>
+
+  <script src="js/app.js"></script>
+  
+<script>
+function loadBookingSelects() {
+  const guests = HMS.get("guests");
+  const rooms = HMS.get("rooms");
+
+  document.getElementById("guestId").innerHTML = guests.map(g =>
+    `<option value="${g.guestId}">${g.guestId} - ${g.fullName}</option>`
+  ).join("");
+
+  document.getElementById("roomId").innerHTML = rooms.map(r =>
+    `<option value="${r.roomId}">${r.roomNumber} - ${r.roomType} - ${r.status}</option>`
+  ).join("");
+}
+
+function countDays(start, end) {
+  const s = new Date(start);
+  const e = new Date(end);
+  const diff = Math.ceil((e - s) / (1000 * 60 * 60 * 24));
+  return diff > 0 ? diff : 1;
+}
+
+function resetBookingForm() {
+  document.getElementById("bookingForm").reset();
+  document.getElementById("editBookingId").value = "";
+}
+
+function renderBookings() {
+  const keyword = document.getElementById("searchBooking").value.toLowerCase();
+  const bookings = HMS.get("bookings").filter(b =>
+    Object.values(b).join(" ").toLowerCase().includes(keyword)
+  );
+
+  document.getElementById("bookingTable").innerHTML = bookings.map(b => `
+    <tr>
+      <td>${b.bookingId}</td>
+      <td>${b.guestName}</td>
+      <td>${b.roomNumber}</td>
+      <td>${b.checkInDate}</td>
+      <td>${b.checkOutDate}</td>
+      <td>${b.numberOfDays}</td>
+      <td>${HMS.badge(b.bookingStatus)}</td>
+      <td>
+        <button class="btn btn-secondary small-btn" onclick="editBooking('${b.bookingId}')">Edit</button>
+        <button class="btn btn-danger small-btn" onclick="deleteBooking('${b.bookingId}')">Delete</button>
+      </td>
+    </tr>
+  `).join("") || `<tr><td colspan="8">No booking records found.</td></tr>`;
+}
+
+function editBooking(id) {
+  const b = HMS.find("bookings", id, "bookingId");
+  if (!b) return;
+
+  document.getElementById("editBookingId").value = b.bookingId;
+  document.getElementById("bookingId").value = b.bookingId;
+  document.getElementById("guestId").value = b.guestId;
+  document.getElementById("roomId").value = b.roomId;
+  document.getElementById("checkInDate").value = b.checkInDate;
+  document.getElementById("checkOutDate").value = b.checkOutDate;
+  document.getElementById("bookingStatus").value = b.bookingStatus;
+}
+
+function deleteBooking(id) {
+  if (confirm("Are you sure you want to delete this booking?")) {
+    HMS.remove("bookings", id, "bookingId");
+    renderBookings();
+  }
+}
+
+document.getElementById("bookingForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  const editId = document.getElementById("editBookingId").value;
+  const guest = HMS.find("guests", document.getElementById("guestId").value, "guestId");
+  const room = HMS.find("rooms", document.getElementById("roomId").value, "roomId");
+  const checkInDate = document.getElementById("checkInDate").value;
+  const checkOutDate = document.getElementById("checkOutDate").value;
+
+  const record = {
+    bookingId: document.getElementById("bookingId").value.trim() || HMS.generateId("B"),
+    guestId: guest.guestId,
+    roomId: room.roomId,
+    guestName: guest.fullName,
+    roomNumber: room.roomNumber,
+    checkInDate,
+    checkOutDate,
+    numberOfDays: countDays(checkInDate, checkOutDate),
+    bookingStatus: document.getElementById("bookingStatus").value
+  };
+
+  HMS.save("bookings", record, editId, "bookingId");
+
+  if (record.bookingStatus === "Confirmed") {
+    const rooms = HMS.get("rooms").map(r => {
+      if (r.roomId === room.roomId) r.status = "Booked";
+      return r;
+    });
+    HMS.set("rooms", rooms);
+  }
+
+  resetBookingForm();
+  loadBookingSelects();
+  renderBookings();
+});
+
+document.getElementById("searchBooking").addEventListener("input", renderBookings);
+document.addEventListener("DOMContentLoaded", function() {
+  loadBookingSelects();
+  renderBookings();
+});
+</script>
+
+</body>
+</html>

@@ -206,25 +206,36 @@
   <script>
     const loginForm = document.getElementById('loginForm');
     const loginCard = document.querySelector('.login-card');
+    const API_URL = "http://localhost:5000/api";
 
-    loginForm.addEventListener('submit', function(e) {
+    loginForm.addEventListener('submit', async function(e) {
       e.preventDefault();
 
       const username = document.getElementById('username').value.trim();
       const password = document.getElementById('password').value.trim();
 
-      if (username === "admin" && password === "admin123") {
-        // Add success animation
-        const btn = loginForm.querySelector('.login-btn');
-        btn.innerHTML = '<span>✓ Welcome!</span>';
-        btn.style.background = 'var(--success)';
-        btn.style.color = 'white';
+      try {
+        const response = await fetch(`${API_URL}/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
 
-        setTimeout(() => {
-          localStorage.setItem("hms_logged_in", "true");
-          window.location.href = "dashboard.html";
-        }, 800);
-      } else {
+        if (response.ok) {
+          // Add success animation
+          const btn = loginForm.querySelector('.login-btn');
+          btn.innerHTML = '<span>✓ Welcome!</span>';
+          btn.style.background = 'var(--success)';
+          btn.style.color = 'white';
+
+          setTimeout(() => {
+            localStorage.setItem("hms_logged_in", "true");
+            window.location.href = "dashboard.html";
+          }, 800);
+        } else {
+          throw new Error("Invalid credentials");
+        }
+      } catch (error) {
         // Add shake animation
         loginCard.classList.add('shake');
         setTimeout(() => loginCard.classList.remove('shake'), 400);

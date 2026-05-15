@@ -133,9 +133,10 @@
       document.getElementById("editRoomId").value = "";
     }
 
-    function renderRooms() {
+    async function renderRooms() {
       const keyword = document.getElementById("searchRoom").value.toLowerCase();
-      const rooms = HMS.get("rooms").filter(r =>
+      const data = await HMS.get("rooms");
+      const rooms = data.filter(r =>
         Object.values(r).join(" ").toLowerCase().includes(keyword)
       );
 
@@ -156,8 +157,8 @@
       `).join("") || `<tr><td colspan="8" class="empty-state"><span class="icon">🛏️</span><h3>No rooms found</h3><p>Add your first room using the form above</p></td></tr>`;
     }
 
-    function editRoom(id) {
-      const r = HMS.find("rooms", id, "roomId");
+    async function editRoom(id) {
+      const r = await HMS.find("rooms", id, "roomId");
       if (!r) return;
 
       document.getElementById("editRoomId").value = r.roomId;
@@ -171,14 +172,14 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function deleteRoom(id) {
+    async function deleteRoom(id) {
       if (confirmDelete("Are you sure you want to delete this room?")) {
-        HMS.remove("rooms", id, "roomId");
+        await HMS.remove("rooms", id, "roomId");
         renderRooms();
       }
     }
 
-    document.getElementById("roomForm").addEventListener("submit", function(e) {
+    document.getElementById("roomForm").addEventListener("submit", async function(e) {
       e.preventDefault();
 
       const editId = document.getElementById("editRoomId").value;
@@ -192,7 +193,7 @@
         status: document.getElementById("status").value
       };
 
-      HMS.save("rooms", record, editId, "roomId");
+      await HMS.save("rooms", record, editId, "roomId");
       resetRoomForm();
       renderRooms();
     });

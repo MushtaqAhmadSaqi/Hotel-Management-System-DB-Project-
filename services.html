@@ -111,8 +111,8 @@
       document.querySelector('.menu-overlay').classList.toggle('active');
     }
 
-    function loadServiceSelects() {
-      const bookings = HMS.get("bookings");
+    async function loadServiceSelects() {
+      const bookings = await HMS.get("bookings");
       document.getElementById("bookingId").innerHTML = bookings.map(b =>
         `<option value="${b.bookingId}">${b.guestName} - Room ${b.roomNumber}</option>`
       ).join("");
@@ -123,9 +123,10 @@
       document.getElementById("editServiceId").value = "";
     }
 
-    function renderServices() {
+    async function renderServices() {
       const keyword = document.getElementById("searchService").value.toLowerCase();
-      const services = HMS.get("services").filter(s =>
+      const data = await HMS.get("services");
+      const services = data.filter(s =>
         Object.values(s).join(" ").toLowerCase().includes(keyword)
       );
 
@@ -144,8 +145,8 @@
       `).join("") || `<tr><td colspan="6" class="empty-state"><span class="icon">🛎️</span><h3>No services found</h3><p>Add your first service using the form above</p></td></tr>`;
     }
 
-    function editService(id) {
-      const s = HMS.find("services", id, "serviceId");
+    async function editService(id) {
+      const s = await HMS.find("services", id, "serviceId");
       if (!s) return;
 
       document.getElementById("editServiceId").value = s.serviceId;
@@ -157,18 +158,18 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function deleteService(id) {
+    async function deleteService(id) {
       if (confirmDelete("Are you sure you want to delete this service?")) {
-        HMS.remove("services", id, "serviceId");
+        await HMS.remove("services", id, "serviceId");
         renderServices();
       }
     }
 
-    document.getElementById("serviceForm").addEventListener("submit", function(e) {
+    document.getElementById("serviceForm").addEventListener("submit", async function(e) {
       e.preventDefault();
 
       const editId = document.getElementById("editServiceId").value;
-      const booking = HMS.find("bookings", document.getElementById("bookingId").value, "bookingId");
+      const booking = await HMS.find("bookings", document.getElementById("bookingId").value, "bookingId");
 
       const record = {
         serviceId: editId || HMS.generateId("S"),
@@ -179,15 +180,15 @@
         serviceDate: document.getElementById("serviceDate").value
       };
 
-      HMS.save("services", record, editId, "serviceId");
+      await HMS.save("services", record, editId, "serviceId");
       resetServiceForm();
       renderServices();
     });
 
     document.getElementById("searchService").addEventListener("input", renderServices);
-    document.addEventListener("DOMContentLoaded", function() {
-      loadServiceSelects();
-      renderServices();
+    document.addEventListener("DOMContentLoaded", async function() {
+      await loadServiceSelects();
+      await renderServices();
     });
   </script>
 </body>

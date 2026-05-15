@@ -134,9 +134,10 @@
       document.getElementById("editStaffId").value = "";
     }
 
-    function renderStaff() {
+    async function renderStaff() {
       const keyword = document.getElementById("searchStaff").value.toLowerCase();
-      const staff = HMS.get("staff").filter(s =>
+      const data = await HMS.get("staff");
+      const staff = data.filter(s =>
         Object.values(s).join(" ").toLowerCase().includes(keyword)
       );
 
@@ -158,8 +159,8 @@
       `).join("") || `<tr><td colspan="9" class="empty-state"><span class="icon">👨‍💼</span><h3>No staff found</h3><p>Add your first staff member using the form above</p></td></tr>`;
     }
 
-    function editStaff(id) {
-      const s = HMS.find("staff", id, "staffId");
+    async function editStaff(id) {
+      const s = await HMS.find("staff", id, "staffId");
       if (!s) return;
 
       document.getElementById("editStaffId").value = s.staffId;
@@ -174,14 +175,14 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function deleteStaff(id) {
+    async function deleteStaff(id) {
       if (confirmDelete("Are you sure you want to delete this staff record?")) {
-        HMS.remove("staff", id, "staffId");
+        await HMS.remove("staff", id, "staffId");
         renderStaff();
       }
     }
 
-    document.getElementById("staffForm").addEventListener("submit", function(e) {
+    document.getElementById("staffForm").addEventListener("submit", async function(e) {
       e.preventDefault();
 
       const editId = document.getElementById("editStaffId").value;
@@ -196,7 +197,7 @@
         status: document.getElementById("status").value
       };
 
-      HMS.save("staff", record, editId, "staffId");
+      await HMS.save("staff", record, editId, "staffId");
       resetStaffForm();
       renderStaff();
     });

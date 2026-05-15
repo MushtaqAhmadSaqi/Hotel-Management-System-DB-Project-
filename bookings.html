@@ -113,9 +113,10 @@
       document.querySelector('.menu-overlay').classList.toggle('active');
     }
 
-    function loadBookingSelects() {
-      const guests = HMS.get("guests");
-      const rooms = HMS.get("rooms").filter(r => r.status === "Available" || r.status === "Booked");
+    async function loadBookingSelects() {
+      const guests = await HMS.get("guests");
+      const allRooms = await HMS.get("rooms");
+      const rooms = allRooms.filter(r => r.status === "Available" || r.status === "Booked");
 
       document.getElementById("guestId").innerHTML = guests.map(g =>
         `<option value="${g.guestId}">${g.fullName}</option>`
@@ -138,9 +139,10 @@
       document.getElementById("editBookingId").value = "";
     }
 
-    function renderBookings() {
+    async function renderBookings() {
       const keyword = document.getElementById("searchBooking").value.toLowerCase();
-      const bookings = HMS.get("bookings").filter(b =>
+      const data = await HMS.get("bookings");
+      const bookings = data.filter(b =>
         Object.values(b).join(" ").toLowerCase().includes(keyword)
       );
 
@@ -161,8 +163,8 @@
       `).join("") || `<tr><td colspan="8" class="empty-state"><span class="icon">📅</span><h3>No bookings found</h3><p>Create your first booking using the form above</p></td></tr>`;
     }
 
-    function editBooking(id) {
-      const b = HMS.find("bookings", id, "bookingId");
+    async function editBooking(id) {
+      const b = await HMS.find("bookings", id, "bookingId");
       if (!b) return;
 
       document.getElementById("editBookingId").value = b.bookingId;
@@ -175,19 +177,19 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function deleteBooking(id) {
+    async function deleteBooking(id) {
       if (confirmDelete("Are you sure you want to delete this booking?")) {
-        HMS.remove("bookings", id, "bookingId");
+        await HMS.remove("bookings", id, "bookingId");
         renderBookings();
       }
     }
 
-    document.getElementById("bookingForm").addEventListener("submit", function(e) {
+    document.getElementById("bookingForm").addEventListener("submit", async function(e) {
       e.preventDefault();
 
       const editId = document.getElementById("editBookingId").value;
-      const guest = HMS.find("guests", document.getElementById("guestId").value, "guestId");
-      const room = HMS.find("rooms", document.getElementById("roomId").value, "roomId");
+      const guest = await HMS.find("guests", document.getElementById("guestId").value, "guestId");
+      const room = await HMS.find("rooms", document.getElementById("roomId").value, "roomId");
       const checkInDate = document.getElementById("checkInDate").value;
       const checkOutDate = document.getElementById("checkOutDate").value;
       const status = document.getElementById("bookingStatus").value;
@@ -204,25 +206,22 @@
         bookingStatus: status
       };
 
-      HMS.save("bookings", record, editId, "bookingId");
+      await HMS.save("bookings", record, editId, "bookingId");
 
       if (status === "Confirmed") {
-        const rooms = HMS.get("rooms").map(r => {
-          if (r.roomId === room.roomId) r.status = "Booked";
-          return r;
-        });
-        HMS.set("rooms", rooms);
+        room.status = "Booked";
+        await HMS.save("rooms", room, room.roomId, "roomId");
       }
 
       resetBookingForm();
-      loadBookingSelects();
+      await loadBookingSelects();
       renderBookings();
     });
 
     document.getElementById("searchBooking").addEventListener("input", renderBookings);
-    document.addEventListener("DOMContentLoaded", function() {
-      loadBookingSelects();
-      renderBookings();
+    document.addEventListener("DOMContentLoaded", async function() {
+      await loadBookingSelects();
+      await renderBookings();
     });
   </script>
 </body>

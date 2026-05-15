@@ -126,9 +126,10 @@
       document.getElementById("nationality").value = "Pakistani";
     }
 
-    function renderGuests() {
+    async function renderGuests() {
       const keyword = document.getElementById("searchGuest").value.toLowerCase();
-      const guests = HMS.get("guests").filter(g =>
+      const data = await HMS.get("guests");
+      const guests = data.filter(g =>
         Object.values(g).join(" ").toLowerCase().includes(keyword)
       );
 
@@ -149,8 +150,8 @@
       `).join("") || `<tr><td colspan="8" class="empty-state"><span class="icon">👥</span><h3>No guests found</h3><p>Add your first guest using the form above</p></td></tr>`;
     }
 
-    function editGuest(id) {
-      const g = HMS.find("guests", id, "guestId");
+    async function editGuest(id) {
+      const g = await HMS.find("guests", id, "guestId");
       if (!g) return;
 
       document.getElementById("editGuestId").value = g.guestId;
@@ -165,14 +166,14 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function deleteGuest(id) {
+    async function deleteGuest(id) {
       if (confirmDelete("Are you sure you want to delete this guest?")) {
-        HMS.remove("guests", id, "guestId");
+        await HMS.remove("guests", id, "guestId");
         renderGuests();
       }
     }
 
-    document.getElementById("guestForm").addEventListener("submit", function(e) {
+    document.getElementById("guestForm").addEventListener("submit", async function(e) {
       e.preventDefault();
 
       const editId = document.getElementById("editGuestId").value;
@@ -187,7 +188,7 @@
         address: document.getElementById("address").value.trim()
       };
 
-      HMS.save("guests", record, editId, "guestId");
+      await HMS.save("guests", record, editId, "guestId");
       resetGuestForm();
       renderGuests();
     });

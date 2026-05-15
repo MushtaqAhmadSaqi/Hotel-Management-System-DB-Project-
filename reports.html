@@ -108,11 +108,13 @@
       document.querySelector('.menu-overlay').classList.toggle('active');
     }
 
-    document.addEventListener("DOMContentLoaded", function() {
-      const guests = HMS.get("guests");
-      const rooms = HMS.get("rooms");
-      const bookings = HMS.get("bookings");
-      const payments = HMS.get("payments");
+    document.addEventListener("DOMContentLoaded", async function() {
+      const [guests, rooms, bookings, payments] = await Promise.all([
+        HMS.get("guests"),
+        HMS.get("rooms"),
+        HMS.get("bookings"),
+        HMS.get("payments")
+      ]);
 
       document.getElementById("guestsCount").textContent = guests.length;
       document.getElementById("roomsCount").textContent = rooms.length;

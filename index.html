@@ -8,14 +8,6 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏨</text></svg>">
 </head>
 <body class="login-body">
-  <!-- Animated background elements -->
-  <div class="floating-shapes">
-    <div class="shape shape-1"></div>
-    <div class="shape shape-2"></div>
-    <div class="shape shape-3"></div>
-    <div class="shape shape-4"></div>
-  </div>
-
   <div class="login-card">
     <div class="login-header">
       <div class="hotel-icon">🏨</div>
@@ -73,62 +65,6 @@
   </div>
 
   <style>
-    .floating-shapes {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      pointer-events: none;
-    }
-
-    .shape {
-      position: absolute;
-      border-radius: 50%;
-      animation: float 8s ease-in-out infinite;
-    }
-
-    .shape-1 {
-      width: 400px;
-      height: 400px;
-      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-      top: -150px;
-      left: -150px;
-    }
-
-    .shape-2 {
-      width: 300px;
-      height: 300px;
-      background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
-      bottom: -100px;
-      right: -100px;
-      animation-delay: -4s;
-    }
-
-    .shape-3 {
-      width: 150px;
-      height: 150px;
-      background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%);
-      top: 30%;
-      right: 10%;
-      animation-delay: -2s;
-    }
-
-    .shape-4 {
-      width: 80px;
-      height: 80px;
-      background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
-      bottom: 20%;
-      left: 15%;
-      animation-delay: -6s;
-    }
-
-    @keyframes float {
-      0%, 100% { transform: translateY(0) rotate(0deg); }
-      50% { transform: translateY(-30px) rotate(10deg); }
-    }
-
     .login-header {
       text-align: center;
       margin-bottom: 32px;
@@ -138,12 +74,6 @@
       font-size: 56px;
       margin-bottom: 16px;
       display: inline-block;
-      animation: pulse 2s ease-in-out infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.1); }
     }
 
     .login-card h1 {
@@ -222,8 +152,8 @@
     }
 
     .demo-badge {
-      background: linear-gradient(135deg, rgba(102, 126, 234, 0.15), rgba(118, 75, 162, 0.15));
-      color: var(--primary);
+      background: rgba(212, 175, 55, 0.15);
+      color: var(--secondary);
       padding: 4px 12px;
       border-radius: 20px;
       font-size: 11px;
@@ -287,7 +217,8 @@
         // Add success animation
         const btn = loginForm.querySelector('.login-btn');
         btn.innerHTML = '<span>✓ Welcome!</span>';
-        btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+        btn.style.background = 'var(--success)';
+        btn.style.color = 'white';
 
         setTimeout(() => {
           localStorage.setItem("hms_logged_in", "true");

@@ -1,0 +1,31 @@
+Insert Data into Booking Collection of DBHotelManagement System:
+
+db.bookings.insertMany([
+    {
+        bookingId: "BK001",
+        guestName: "Ahmad Raza",
+        roomNumber: "101",
+        roomPrice: 5000,
+        totalCharges: 5750,
+        bookingStatus: "Checked In",
+        paymentStatus: "Paid"
+    },
+    {
+        bookingId: "BK002",
+        guestName: "Fatima Noor",
+        roomNumber: "102",
+        roomPrice: 6000,
+        totalCharges: 7500,
+        bookingStatus: "Checked Out",
+        paymentStatus: "Pending"
+    },
+    {
+        bookingId: "BK003",
+        guestName: "Bilal Hussain",
+        roomNumber: "201",
+        roomPrice: 4500,
+        totalCharges: 6000,
+        bookingStatus: "Pending",
+        paymentStatus: "Partial"
+    }
+]);
